@@ -5,6 +5,7 @@ import {BsArrowLeftShort} from "react-icons/bs";
 import {TweetDetailsContext} from "./TweetDetailsContext";
 import {format} from 'date-fns';
 import ActionBarDetails from "./ActionBarDetails";
+import { FiRepeat} from "react-icons/fi";
 
 const TweetDetails = () =>{
     const {currentTweet} = useContext(TweetDetailsContext);
@@ -17,6 +18,7 @@ const TweetDetails = () =>{
             <SectionTitle>Meow</SectionTitle>
         </TitleBox>
         <SectionBox>
+        {currentTweet.retweetFrom? <Retweeted><FiRepeat/> {currentTweet.retweetFrom.displayName} Remeowed</Retweeted>:null}
         <HeaderTweet>
             <Avatar src={currentTweet.author.handle==="giantcat9"? 
             "https://pbs.twimg.com/profile_images/1348661903741038596/jH448dJ4_400x400.jpg"
@@ -24,7 +26,8 @@ const TweetDetails = () =>{
             <Name>
                 <DisplayName 
                 tabIndex="0" 
-                onClick={()=>{history.push(`/${currentTweet.author.handle}`);}}>
+                onClick={()=>{history.push(`/${currentTweet.author.handle}`);}}
+                onKeyDown={(e)=>{if(e.key ==="Enter"){history.push(`/${currentTweet.author.handle}`);}}}>
                     {currentTweet.author.displayName}</DisplayName>
                 <Handle>@{currentTweet.author.handle}</Handle>
             </Name>
@@ -45,7 +48,14 @@ const TweetDetails = () =>{
     );
 };
 
+const Retweeted = styled.div`
+  color: gray;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
 
+`;
 const FooterTweet = styled.div`
     display: flex;
     flex-direction: row;
@@ -102,18 +112,13 @@ const Handle = styled.div`
   line-height: 20px;
   color: gray;
 `;
-const Time = styled.div`
-  font-size: 14px;
-  line-height: 20px;
-  color: gray;
-  padding-left: 5px;
-`;
+
 const Status = styled.div`
-    width: 480px;
     overflow-wrap: break-word;
     padding-top: 14px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
+    width: 100%;
 `;
 const Image = styled.img`
   max-width:100%;
@@ -131,6 +136,8 @@ const Avatar = styled.img`
 `;
 const Wrapper = styled.div`
     width: 600px;
+    display:flex;
+    flex-direction: column;
 `;
 const TitleBox = styled.div`
     border: 1px solid #EBEEF0;
@@ -143,9 +150,7 @@ const BottomBox = styled.div`
     border: 1px solid #EBEEF0;
     border-bottom: none;
     padding: 12px 14px;
-    background-color: pink;
-    height: auto;
-`;
+    flex-grow: 1;`;
 const SectionTitle = styled.div`
     font-weight: bold;
     font-size: 22px;

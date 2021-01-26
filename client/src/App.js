@@ -10,10 +10,12 @@ import Sidebar from "./components/Sidebar";
 import styled from "styled-components";
 import {CurrentUserProvider} from "./components/CurrentUserContext";
 import {TweetDetailsProvider} from "./components/Tweet/TweetDetailsContext";
+import GlobalStyles from "./components/GlobalStyles";
 
 const App = () => {
   return (
     <Wrapper>
+      <GlobalStyles/>
     <CurrentUserProvider>
     <TweetDetailsProvider>
       <Router>
@@ -32,7 +34,7 @@ const App = () => {
             <TweetDetails/>
           </Route>
           <Route exact path="/:profileId">
-            <Profile/>
+            <Profile />
           </Route>
         </Switch>
       </Router>

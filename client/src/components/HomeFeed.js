@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-
 import Tweet from "./Tweet/Tweet";
 import LoadingIcon from "./LoadingIcon";
 import {CurrentUserContext} from "./CurrentUserContext";
@@ -25,6 +24,8 @@ const HomeFeed = () =>{
             .then((res)=>{
                 setUserFeed(Object.values(res.tweetsById).reverse());
                 console.log(Object.values(res.tweetsById).reverse());
+                console.log("INITIAL",res );
+
                 setHomeStatus("idle");
             })
             .catch((error)=>{
@@ -96,8 +97,7 @@ const HomeFeed = () =>{
         }
     };
 
-    // Conditionnal render of the page
-    // Depending on currentUser
+    // Conditionnal render of the page depending on "currentUser"
     switch(status){
         case 'loading':
             return <Wrapper><LoadingIcon/></Wrapper>;
@@ -112,14 +112,8 @@ const HomeFeed = () =>{
                 <StyledForm onSubmit={handleSubmit}>
                 <FormSection1>
                     <Avatar src={currentUser.avatarSrc}/>
-                    <StyledTextArea 
-                    id="tweet-content"
-                    type="text" 
-                    placeholder="What's happening?"
-                    rows="5" cols="1"
-                    value={newTweet.content}
-                    onChange={handleNewTweet}
-                    />
+                    <StyledTextArea id="tweet-content" type="text" placeholder="What's happening?" rows="5" cols="1"
+                    value={newTweet.content} onChange={handleNewTweet}/>
                 </FormSection1>
                 <FormSection2>
                     <CharCount style={{color: countColor}}>{newTweet.numCharLeft}</CharCount>
@@ -132,44 +126,6 @@ const HomeFeed = () =>{
             </Wrapper>
     }
 
-// OLD VERSION
-
-  /*  return (
-    <Wrapper>
-        {status ==="loading"? <LoadingIcon/>: 
-        <>
-        <SectionBox>
-            <SectionTitle>Home</SectionTitle>
-        </SectionBox>
-        <SectionBox>
-
-        <StyledForm onSubmit={handleSubmit}>
-        <FormSection1>
-            <Avatar src={currentUser.avatarSrc}/>
-            <StyledTextArea 
-            id="tweet-content"
-            type="text" 
-            placeholder="What's happening?"
-            rows="5" cols="1"
-            value={newTweet.content}
-            onChange={handleNewTweet}
-            />
-        </FormSection1>
-        <FormSection2>
-            <CharCount style={{color: countColor}}>{newTweet.numCharLeft}</CharCount>
-        <StyledButton type="submit" disabled={buttonState}>Meow</StyledButton>
-        </FormSection2>
-        </StyledForm>
-
-        </SectionBox>
-        <Divider/>
-
-        {userFeed ? userFeed.map((tweet)=>
-            <Tweet tweet={tweet} key={tweet.id} setUserFeed={setUserFeed}/>)
-            :<LoadingIcon/> }     
-            </>}
-    </Wrapper>
-    );*/
 };
 
 export default HomeFeed;
@@ -177,13 +133,11 @@ export default HomeFeed;
 const Wrapper = styled.div`
     width: 600px;
 `;
-
 const SectionBox = styled.div`
   
     border: 1px solid #EBEEF0;
     border-bottom: none;
     padding: 12px 14px;
-
 `;
 const Divider = styled.div`
   
@@ -192,7 +146,6 @@ const Divider = styled.div`
     padding: 4px;
     background-color: #F7F9FA;
 `;
-
 const FormSection1 = styled.div`
     display:flex;
     flex-direction: row;
@@ -208,12 +161,10 @@ const SectionTitle = styled.p`
     font-weight: bold;
     font-size: 22px;
 `;
-
 const StyledForm = styled.form`
     display: inline;
     padding-top: 0px;
 `;
-
 const StyledTextArea = styled.textarea`
     width: 500px;
     border: none;
@@ -221,16 +172,12 @@ const StyledTextArea = styled.textarea`
     resize: none;
     font-size: 18px;
     font-family: Helvetica, sans-serif;
-
     ::placeholder{
-        color: lightgray;
-    }
-
+        color: lightgray;}
     &:active, &:focus{
         outline: none;
     }
 `;
-
 const Avatar = styled.img`
     display: inline;
     height: 48px;
@@ -238,14 +185,12 @@ const Avatar = styled.img`
     border-radius: 50%;
     margin-right: 16px;
 `;
-
 const CharCount = styled.p`
     margin:0;
     padding:0;
     color: #D2D2D7;
     display: inline;
     font-size: 15px;
-
 `;
  const StyledButton = styled.button`
     color: white;
@@ -256,15 +201,12 @@ const CharCount = styled.p`
     border-radius: 50px;
     background-color: ${COLORS.primary};
     display: inline;
-
     &:disabled{
         opacity: 50%;
     }
-
     &:active{
        outline: none;
     }
-
     &:hover{
         cursor: pointer;
     }

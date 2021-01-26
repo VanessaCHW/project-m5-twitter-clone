@@ -28,27 +28,32 @@ const ActionBar = ({tweet}) =>{
     const handleClick = (event)=>{
         event.stopPropagation();
     };
-
+    const handleLikeTab = (event)=>{
+        if(event.key ==="Enter"){
+            event.preventDefault();
+            handleLike(event);
+        }
+      };
     return <Wrapper>
         <Action tabIndex="-1">
-            <HeartButton onClick={handleClick}  tabIndex="0">
+            <ReplyShare onClick={handleClick}  tabIndex="0">
                 <BiMessageRounded/>
-            </HeartButton>
+            </ReplyShare>
         </Action><Count> </Count>
         <Action tabIndex="-1">
-            <HeartButton onClick={handleClick}  tabIndex="0">
-            <FiRepeat/>
-            </HeartButton>
-        </Action><Count> </Count>
+            <Retweet onClick={handleClick}  tabIndex="0" >
+            <FiRepeat />
+            </Retweet>
+        </Action>{tweet.retweetFrom? <Count>1</Count>: <Count/>}
         <Action tabIndex="-1">
-            <HeartButton onClick={handleLike}  tabIndex="0">
+            <HeartButton onClick={handleLike}  onKeyDown={handleLikeTab} tabIndex="0">
                 <FiHeart/>
             </HeartButton>
         </Action>{isLiked? <Count>{1}</Count>: <Count/>}
         <Action tabIndex="-1">
-            <HeartButton onClick={handleClick}  tabIndex="0">
+            <ReplyShare onClick={handleClick}  tabIndex="0">
                 <FiUpload/>
-            </HeartButton>
+            </ReplyShare>
         </Action><Count> </Count>
     </Wrapper>
 
@@ -93,14 +98,50 @@ const HeartButton=styled.div`
   width: 38px;
   height: 38px;
   &:hover{
-      background-color: red;
+    background-color:rgb(251,229,236);
+      color: rgb(224, 36, 94);
   }
   &:focus{
       outline: none;
-      background-color: pink;
+      background-color:rgb(251,229,236);
   }
 `;
 
+const ReplyShare=styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  width: 38px;
+  height: 38px;
+  &:hover{
+      background-color: rgb(228,243,251);
+      color: rgb(27, 149, 224);
+  }
+  &:focus{
+      outline: none;
+      background-color: rgb(228,243,251);
+  }
+`;
+
+const Retweet=styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  width: 38px;
+  height: 38px;
+  &:hover{
+      background-color: rgb(228,247,237);
+      color: rgb(23, 191, 99);
+  }
+  &:focus{
+      outline: none;
+      background-color: rgb(228,247,237);
+  }
+`;
 const Count = styled.div`
     text-align: left;
     padding-right:0;

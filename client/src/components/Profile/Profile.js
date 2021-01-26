@@ -1,48 +1,54 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {CurrentUserContext} from "../../components/CurrentUserContext";
 import {format, parse} from 'date-fns';
 import {COLORS} from "../../constants";
 import {GrLocation} from "react-icons/gr";
 import {FiCalendar} from "react-icons/fi";
-
 import ProfileFeed from "./ProfileFeed";
 import LoadingIcon from "../../components/LoadingIcon";
-
+import ErrorMsg from "../ErrorMsg";
+import {Tabs, Tab} from "react-tabs";
 
 const Profile = () =>{
-
-    // Create the user to be rendered
-    const [user, setUser] = useState(null);
-    
-    // Import currentUser
-    const {currentUser} = useContext(CurrentUserContext);
-
-    // Find the handle from the url
+    const {currentUser,status} = useContext(CurrentUserContext);
+    const [user, setUser] = useState(null); // Create the user to be rendered
     const [userHandle, setHandle] = useState(useHistory().location.pathname.replace("/",''));
-    //const userHandle = useHistory().location.pathname.replace("/",'');
+    const [loadingProfile, setLoadingProfile] = useState("loading");
+    const {userID} = useParams();
 
     // Fetch new profile if it isn't the current user
     useEffect(()=>{
-        
-        if(currentUser !== null){if(userHandle !== (currentUser.handle)){
-            fetch(`/api/${userHandle}/profile`)
-            .then((res)=>res.json())
-            .then((res)=>{
-                setUser(Object.values(res)[0]);
-                console.log("Some Profile:",Object.values(res)[0]);
+        if(currentUser!==null){
+            if(userHandle !== (currentUser.handle)){
+                fetch(`/api/${userHandle}/profile`)
+                .then((res)=>res.json())
+                .then((res)=>{
+                    setUser(Object.values(res)[0]);
+                    setLoadingProfile("idle");
+                    console.log("Some Profile:",Object.values(res)[0]);
+                    console.log("Params", userID);
             })
-            .catch((error)=>console.error('Error! loading user profile',error))
-        }else{
-            setUser(currentUser);
-        }}
-    },[userHandle, currentUser]);
+                .catch((error)=>{
+                    console.error('Error! loading user profile',error);
+                    setLoadingProfile("error");
+            })
+            }else{
+                setUser(currentUser);
+                setLoadingProfile("idle");}
+        }else if(status==="error"){
+            setLoadingProfile("error")
+        }
+    },[userHandle, currentUser, status]);
 
-    return (
-    <Wrapper>
-        {user===null? <LoadingIcon/> :
-        <>
+    switch(loadingProfile){
+        case 'loading':
+            return <Wrapper><LoadingIcon/></Wrapper>;
+        case 'error':
+            return <Wrapper><ErrorMsg/></Wrapper>;
+        case 'idle':
+    return <Wrapper>
         <SectionBox>
             <BannerBox>
                 <Banner src={user.handle==="giantcat9"?
@@ -88,12 +94,8 @@ const Profile = () =>{
             </OptionBar>
         </SectionBox>
         <ProfileFeed userHandle={userHandle}/>
-        </>}
-
     </Wrapper>
-    );
-
-
+    }; //end of Switch
 };
 
 export default Profile;

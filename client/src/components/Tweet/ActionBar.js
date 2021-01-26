@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { FiMessageCircle, FiRepeat,FiHeart,FiUpload } from "react-icons/fi";
-import {TiHeartOutline} from "react-icons/ti";
+import { FiRepeat,FiHeart,FiUpload } from "react-icons/fi";
 import {BiMessageRounded} from "react-icons/bi";
 import { useHistory } from "react-router-dom";
 
@@ -59,7 +58,7 @@ const ActionBar = ({tweet, setUserFeed}) =>{
             <HeartButton onClick={handleClick} tabIndex="0">
             <FiRepeat/>
             </HeartButton>
-        </Action><Count> </Count>
+        </Action>{tweet.retweetFrom? <Count>1</Count>: <Count/>}
         <Action tabIndex="-1">
             <HeartButton onClick={handleLike} onKeyDown={handleLikeTab} tabIndex="0">
                 <FiHeart/>

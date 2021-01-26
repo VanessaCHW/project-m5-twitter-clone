@@ -3,21 +3,33 @@ import styled from "styled-components";
 
 import Tweet from "../Tweet/Tweet";
 import LoadingIcon from "../../components/LoadingIcon";
+import ErrorMsg from "../ErrorMsg";
 
 const ProfileFeed = ({userHandle}) =>{
 
     const [userFeed, setUserFeed]= useState(null);
+    const [status, setStatus] = useState('loading');
     useEffect(()=>{
             fetch(`/api/${userHandle}/feed`)
             .then((res)=>res.json())
             .then((res)=>{
                 setUserFeed(Object.values(res.tweetsById).reverse());
+                setStatus("idle");
                 console.log("Profile feed",Object.values(res.tweetsById).reverse());
             })
-            .catch((error)=>console.error('Error (fetch user tweets)',error))
-        
+            .catch((error)=>{
+                console.error('Error (fetch user tweets)',error)
+                setStatus("error");})
     },[]);
 
+    switch(status){
+        case 'loading':
+            return <Wrapper><LoadingIcon/></Wrapper>;
+
+        case 'error':
+            return <Wrapper><ErrorMsg/></Wrapper>;
+
+        case 'idle':   
     return (
     <Wrapper>
         {userFeed ? 
@@ -29,6 +41,7 @@ const ProfileFeed = ({userHandle}) =>{
             :<LoadingIcon/> } 
     </Wrapper>
     );
+};
 };
 
 export default ProfileFeed;
