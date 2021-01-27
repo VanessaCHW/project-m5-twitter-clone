@@ -38,11 +38,11 @@ const Tweet = ({tweet, setUserFeed}) =>{
     return (
   <Wrapper>
     {tweet.retweetFrom? <Retweeted><FiRepeat/> {tweet.retweetFrom.displayName} Remeowed</Retweeted>:null}
-    <SectionBox onClick={handleTweetClick} onKeyDown={handleTweetTab} tabIndex="0">
+    <SectionBox onClick={handleTweetClick} onKeyDown={handleTweetTab} tabIndex="0" aria-label="view tweet">
       <Avatar src={tweet.author.handle==="giantcat9"? "https://pbs.twimg.com/profile_images/1348661903741038596/jH448dJ4_400x400.jpg"
       :tweet.author.avatarSrc}/>
       <Content>
-        <DisplayName onClick={handleNameClick} onKeyDown={handleNameTab} tabIndex="0">{tweet.author.displayName}</DisplayName>
+        <DisplayName onClick={handleNameClick} onKeyDown={handleNameTab} tabIndex="0" aria-label="view profile">{tweet.author.displayName}</DisplayName>
         <Username >@{tweet.author.handle}</Username>
         <Time>· {format(new Date(tweet.timestamp),'MMM do')}</Time>
         <Status>{tweet.status}</Status>

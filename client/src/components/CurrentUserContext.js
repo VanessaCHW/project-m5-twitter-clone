@@ -14,11 +14,10 @@ export const CurrentUserProvider = ({ children }) => {
         .then((res)=>res.json())
         .then((res)=>{
             setCurrentUser(Object.values(res)[0]);
-            console.log("My Profile:",Object.values(res)[0]);
             setStatus("idle");
         })
         .catch((error)=>{
-            console.error('Error!!',error);
+            console.error('Error: fetch current user profile',error);
             setStatus("error");
         })
     },[]);
@@ -28,5 +27,3 @@ export const CurrentUserProvider = ({ children }) => {
       </CurrentUserContext.Provider>
     
   };
-
-  

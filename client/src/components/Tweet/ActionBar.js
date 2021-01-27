@@ -6,10 +6,10 @@ import { useHistory } from "react-router-dom";
 
 const ActionBar = ({tweet, setUserFeed}) =>{
     const currentPage = useHistory().location.pathname;
-
+    
+// PUT request to like/unike
     const handleLike = (event)=>{
         event.stopPropagation();
-
         fetch(`/api/tweet/${tweet.id}/like`, {
             method: "PUT",
             body: JSON.stringify({like: !tweet.isLiked}),
@@ -19,24 +19,18 @@ const ActionBar = ({tweet, setUserFeed}) =>{
               }
         })
         .then((res)=>{
-            console.log("Like request: ", res.json());
             if(currentPage==="/"){
                 fetch("/api/me/home-feed")
                 .then((res)=>res.json())
-                .then((res)=>{
-                    setUserFeed(Object.values(res.tweetsById).reverse());
-                    console.log(Object.values(res.tweetsById).reverse());
-            })
+                .then((res)=> setUserFeed(Object.values(res.tweetsById).reverse()))
             }else{
                 fetch(`/api${currentPage}/feed`)
                 .then((res)=>res.json())
-                .then((res)=>{
-                    setUserFeed(Object.values(res.tweetsById).reverse());
-                    console.log("Profile feed",Object.values(res.tweetsById).reverse());
-            })}
+                .then((res)=> setUserFeed(Object.values(res.tweetsById).reverse()))}
         })
     };
 
+// PUT request to like/unlike while using TAB
     const handleLikeTab = (event)=>{
         if(event.key ==="Enter"){
             event.preventDefault();
@@ -44,30 +38,31 @@ const ActionBar = ({tweet, setUserFeed}) =>{
         }
       };
 
+// Placeholder function for reply/share/retweet
     const handleClick = (event)=>{
         event.stopPropagation();
     };
 
     return <Wrapper>
         <Action tabIndex="-1">
-            <HeartButton onClick={handleClick} tabIndex="0">
+            <ReplyShare onClick={handleClick} tabIndex="0">
                 <BiMessageRounded/>
-            </HeartButton>
+            </ReplyShare>
         </Action><Count> </Count>
         <Action tabIndex="-1">
-            <HeartButton onClick={handleClick} tabIndex="0">
+            <Retweet onClick={handleClick} tabIndex="0">
             <FiRepeat/>
-            </HeartButton>
+            </Retweet>
         </Action>{tweet.retweetFrom? <Count>1</Count>: <Count/>}
         <Action tabIndex="-1">
-            <HeartButton onClick={handleLike} onKeyDown={handleLikeTab} tabIndex="0">
+            <HeartButton onClick={handleLike} onKeyDown={handleLikeTab} tabIndex="0"  aria-label="like tweet">
                 <FiHeart/>
             </HeartButton>
         </Action>{tweet.isLiked? <Count>{tweet.numLikes}</Count>: <Count/>}
         <Action tabIndex="-1">
-            <HeartButton onClick={handleClick} tabIndex="0">
+            <ReplyShare onClick={handleClick} tabIndex="0">
                 <FiUpload/>
-            </HeartButton>
+            </ReplyShare>
         </Action><Count> </Count>
     </Wrapper>
 
@@ -101,6 +96,8 @@ const Action = styled.button`
     &:hover{
     cursor: pointer;
     }
+
+    
 `;
 
 const HeartButton=styled.div`
@@ -112,12 +109,48 @@ const HeartButton=styled.div`
   width: 38px;
   height: 38px;
   &:hover{
-      background-color: red;
+    background-color:rgb(251,229,236);
+      color: rgb(224, 36, 94);
   }
-
   &:focus{
-      background-color: pink;
       outline: none;
+      background-color:rgb(251,229,236);
+  }
+`;
+
+const ReplyShare=styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  width: 38px;
+  height: 38px;
+  &:hover{
+      background-color: rgb(228,243,251);
+      color: rgb(27, 149, 224);
+  }
+  &:focus{
+      outline: none;
+      background-color: rgb(228,243,251);
+  }
+`;
+
+const Retweet=styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  width: 38px;
+  height: 38px;
+  &:hover{
+      background-color: rgb(228,247,237);
+      color: rgb(23, 191, 99);
+  }
+  &:focus{
+      outline: none;
+      background-color: rgb(228,247,237);
   }
 `;
 

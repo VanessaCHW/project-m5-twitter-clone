@@ -23,9 +23,6 @@ const HomeFeed = () =>{
             .then((res)=>res.json())
             .then((res)=>{
                 setUserFeed(Object.values(res.tweetsById).reverse());
-                console.log(Object.values(res.tweetsById).reverse());
-                console.log("INITIAL",res );
-
                 setHomeStatus("idle");
             })
             .catch((error)=>{
@@ -61,21 +58,19 @@ const HomeFeed = () =>{
               }
         })
         .then((res)=>{
-            console.log(res.json());
-            setNewTweet({
-                content: "",
-                numCharLeft: 280});
+            setNewTweet({content: "", numCharLeft: 280});
+            setButtonState(true);
         })
         .catch((error)=>{
             console.error('Error (fetch homefeed after tweet)',error);
             setHomeStatus("error");
+            setButtonState(true);
         })
         .then(()=>{
             fetch("/api/me/home-feed")
             .then((res)=>res.json())
             .then((res)=>{
                 setUserFeed(Object.values(res.tweetsById).reverse());
-                console.log(Object.values(res.tweetsById).reverse());
                 setHomeStatus("idle");
             })
         })
@@ -94,6 +89,8 @@ const HomeFeed = () =>{
                 return <Wrapper><ErrorMsg/></Wrapper>;
             case "idle":
                 return userFeed.map((tweet)=><Tweet tweet={tweet} key={tweet.id} setUserFeed={setUserFeed}/>)
+            default:
+                return <Wrapper><LoadingIcon/></Wrapper>;
         }
     };
 
@@ -124,6 +121,9 @@ const HomeFeed = () =>{
             <Divider/>  
             {renderHomefeed()}
             </Wrapper>
+
+        default:
+            return <Wrapper><LoadingIcon/></Wrapper>;
     }
 
 };
@@ -201,6 +201,8 @@ const CharCount = styled.p`
     border-radius: 50px;
     background-color: ${COLORS.primary};
     display: inline;
+    outline: none;
+
     &:disabled{
         opacity: 50%;
     }

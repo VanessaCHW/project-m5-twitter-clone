@@ -5,48 +5,47 @@ import {BiMessageRounded} from "react-icons/bi";
 import { useHistory } from "react-router-dom";
 
 const ActionBar = ({tweet}) =>{
-    const currentPage = useHistory().location.pathname;
     const [isLiked, setIsLiked] = useState(tweet.isLiked);
 
+    // PUT request to like/unike
     const handleLike = (event)=>{
         event.stopPropagation();
-
         fetch(`/api/tweet/${tweet.id}/like`, {
             method: "PUT",
             body: JSON.stringify({like: !isLiked}),
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json",
-              }
-        })
-        .then((res)=>{
-            console.log("Like request: ", res.json());
-            setIsLiked(!isLiked);
-        })
+                "Content-Type": "application/json",}
+            })
+        .then((res)=>setIsLiked(!isLiked))
     };
 
-    const handleClick = (event)=>{
-        event.stopPropagation();
-    };
+    // PUT request to like/unlike while using TAB
     const handleLikeTab = (event)=>{
         if(event.key ==="Enter"){
             event.preventDefault();
             handleLike(event);
         }
-      };
+    };    
+    
+    // Placeholder function for reply/share/retweet
+    const handleClick = (event)=>{
+        event.stopPropagation();
+    };
+
     return <Wrapper>
         <Action tabIndex="-1">
-            <ReplyShare onClick={handleClick}  tabIndex="0">
+            <ReplyShare onClick={handleClick} tabIndex="0">
                 <BiMessageRounded/>
             </ReplyShare>
-        </Action><Count> </Count>
+        </Action><Count/>
         <Action tabIndex="-1">
-            <Retweet onClick={handleClick}  tabIndex="0" >
+            <Retweet onClick={handleClick} tabIndex="0" >
             <FiRepeat />
             </Retweet>
         </Action>{tweet.retweetFrom? <Count>1</Count>: <Count/>}
         <Action tabIndex="-1">
-            <HeartButton onClick={handleLike}  onKeyDown={handleLikeTab} tabIndex="0">
+            <HeartButton onClick={handleLike} onKeyDown={handleLikeTab} tabIndex="0" aria-label="like tweet">
                 <FiHeart/>
             </HeartButton>
         </Action>{isLiked? <Count>{1}</Count>: <Count/>}
